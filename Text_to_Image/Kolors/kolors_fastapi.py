@@ -72,7 +72,7 @@ def load_mistral():
     tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-Nemo-Instruct-2407")
     model = AutoModelForCausalLM.from_pretrained(
         "mistralai/Mistral-Nemo-Instruct-2407",
-        token="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",
+        token="",
         torch_dtype=torch.bfloat16,
         device_map=device,
         ignore_mismatched_sizes=True,
