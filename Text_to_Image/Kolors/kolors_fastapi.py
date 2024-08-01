@@ -45,12 +45,9 @@ app.add_middleware(
 ################ Translate model prepare ################
 """
 
-login("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")
+login("")
 
-Openai_API_KEY = "sk-proj-CFsSaackBkfJnN8eAtCDT3BlbkFJaFtkZfjEcubhPJ7pX3sA"
-openai.api_key =os.getenv(Openai_API_KEY)
-from openai import OpenAI
-client = OpenAI(api_key=Openai_API_KEY)
+
 
 translate_model_flag="mistral" #gpt
 

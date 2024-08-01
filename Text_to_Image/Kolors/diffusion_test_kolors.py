@@ -22,14 +22,8 @@ from kolors.models.tokenization_chatglm import ChatGLMTokenizer
 from diffusers import UNet2DConditionModel, AutoencoderKL
 from diffusers import EulerDiscreteScheduler
 import gradio as gr
-login("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")
+login("")
 
-
-import openai, os
-Openai_API_KEY = "sk-proj-CFsSaackBkfJnN8eAtCDT3BlbkFJaFtkZfjEcubhPJ7pX3sA"
-openai.api_key =os.getenv(Openai_API_KEY)
-from openai import OpenAI
-client = OpenAI(api_key=Openai_API_KEY)
 
 def translate(text):
     gpt_prompt=f"""Translate the following Korean text to English:
