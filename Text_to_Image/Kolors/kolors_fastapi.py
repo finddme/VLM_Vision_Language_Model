@@ -1,5 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
-from fastapi import FastAPI, File, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, File, UploadFile, Depends, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 import uvicorn
 import gradio as gr
@@ -25,6 +24,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStream
 from threading import Thread
 from huggingface_hub import login
 import huggingface_hub
+import asyncio
 
 # FastAPI
 app = FastAPI(
@@ -47,10 +47,14 @@ app.add_middleware(
 
 login("")
 
-
+semaphore = asyncio.Semaphore(1)
 
 translate_model_flag="mistral" #gpt
 
+async def single_request_lock():
+    async with semaphore:
+        yield
+        
 async def gpt_translate(text):
     gpt_prompt=f"""Translate the following Korean text to Chinese:
 
@@ -243,7 +247,7 @@ class UserInput(BM):
     user_input: str
 
 @app.post("/genrate_image")
-async def process_kolors(user_input: UserInput):
+async def process_kolors(user_input: UserInput, dependencies: list = Depends(single_request_lock)):
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
@@ -270,4 +274,5 @@ async def process_kolors(user_input: UserInput):
     return StreamingResponse(memory_stream, media_type="image/png")
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8782)
+    # uvicorn.run(app, host="0.0.0.0", port=8782)
+    uvicorn.run("__main__:app", host="0.0.0.0", port=8782, workers=2, reload=True)
